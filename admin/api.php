@@ -29,20 +29,20 @@
             Notifications("./login.php","请输入密码！","w");
         }
         //判断是否存在中文
-        if (preg_match("/[\x7f-\xff]/", $_POST['id'])||preg_match("/[\x7f-\xff]/", $_POST['password'])||preg_match("/[\x7f-\xff]/", $_POST['username'])||preg_match("/[\x7f-\xff]/", $_POST['power'])) {
-            Notifications("./edit.php?state=editUser&id={$_POST['id']}","存在非法字符！","w");
+        if (preg_match("/[\x7f-\xff]/", $_POST['password'])||preg_match("/[\x7f-\xff]/", $_POST['username'])) {
+            Notifications("./login.php","存在非法字符！","w");
         }
         if (mb_strlen($_POST['username'], 'UTF8') > 24) {
-            Notifications("./edit.php?state=editUser&id={$id}","用户名不得超出24个字符！","w");
+            Notifications("./login.php","用户名不得超出24个字符！","w");
         }
         if (mb_strlen($_POST['username'], 'UTF8') < 6) {
-            Notifications("./edit.php?state=editUser&id={$id}","用户名不得低于6个字符！","w");
+            Notifications("./login.php","用户名不得低于6个字符！","w");
         }
         if (mb_strlen($_POST['password'], 'UTF8') > 24) {
-            Notifications("./edit.php?state=editUser&id={$id}","密码不得超出24个字符！","w");
+            Notifications("./login.php","密码不得超出24个字符！","w");
         }
         if (mb_strlen($_POST['password'], 'UTF8') < 6) {
-            Notifications("./edit.php?state=editUser&id={$id}","密码不得低于6个字符！","w");
+            Notifications("./login.php","密码不得低于6个字符！","w");
         }
     
         $username = Escape($conn, $_POST['username']);//获取登录表单信息
@@ -281,6 +281,12 @@
 
     //编辑系统
     if ($_POST['state'] == 'editSystem') {
+        
+        //判断当前登录者权限
+        if ($admin_data['power'] !== "1") {
+            Notifications("./index.php","权限不足！","d");
+        }        
+        
         //整理数据确保可入库
         $url = Escape($conn, $_POST['url']);
         $tittle = Escape($conn, $_POST['tittle']);
